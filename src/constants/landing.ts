@@ -1,4 +1,4 @@
-import { Icons } from '@/components/Icons'
+import { Icons } from '@/components/common/Icons'
 import { FeatureItem, HowItWorksStep, UseCaseItem, RoadmapItem } from '@/types/landing'
 
 export const FEATURES: FeatureItem[] = [

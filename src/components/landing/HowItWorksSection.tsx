@@ -1,4 +1,4 @@
-import { Icons } from '@/components/Icons'
+import { Icons } from '@/components/common/Icons'
 import { HOW_IT_WORKS_STEPS } from '@/constants/landing'
 
 const HowItWorksSection = () => {

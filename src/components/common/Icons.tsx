@@ -22,7 +22,10 @@ import {
 	Twitter,
 	Linkedin,
 	Sun,
-	Moon
+	Moon,
+	LogIn,
+	UserPlus,
+	User
 } from 'lucide-react'
 
 export type IconProps = LucideProps
@@ -83,6 +86,11 @@ export const Icons = {
 	// 🌞 Theme Icons
 	Sun,
 	Moon,
+
+	// 🔐 Authentication Icons
+	LogIn,
+	UserPlus,
+	User,
 
 	// Social Media Icons
 	GitHub: Github,
