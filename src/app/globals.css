@@ -157,7 +157,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px hsl(var(--primary) / 0.2);
   }
   50% {
@@ -166,7 +167,8 @@
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -203,4 +205,14 @@
 .glow-on-hover:hover {
   box-shadow: 0 0 30px hsl(var(--primary) / 0.3);
   transform: translateY(-2px);
+}
+
+/* ---------------------------------- Clerk --------------------------------- */
+
+.cl-internal-p8bmz4 {
+  @apply shadow-none;
+}
+
+.cl-internal-d5pd3d {
+  @apply shadow-none rounded-none;
 }

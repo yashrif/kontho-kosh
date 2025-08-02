@@ -73,17 +73,20 @@ x => x + x
 
 ```javascript
 for (let i = 0, n = str.length; i < 10; i++) {
-    if (x < 10) {
-        foo();
-    }
+  if (x < 10) {
+    foo();
+  }
 }
 
-function f(x: number, y: string): void { }
+function f(x: number, y: string): void {}
 ```
 
 ### Feature-Color Mapping
 
+- Use the colorscheme strictly from the [globals.css](../src/app/globals.css) file.
 
+### UI Design
+- Use rounded corners for all the components. Rounded full for buttons.
 
 ## Additional Guidelines
 

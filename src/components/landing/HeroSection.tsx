@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Icons } from '@/components/Icons'
+import { Icons } from '@/components/common/Icons'
 
 const HeroSection = () => {
 	return (

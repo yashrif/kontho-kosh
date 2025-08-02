@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/Icons";
+import { Icons } from "@/components/common/Icons";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
+import Link from "next/link";
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 const Navigation = () => {
   return (
@@ -48,10 +54,34 @@ const Navigation = () => {
           {/* CTA Button */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <Button>
-              <Icons.Wallet className="mr-2 h-4 w-4" />
-              Connect
-            </Button>
+
+            {/* Authentication */}
+            <SignedOut>
+              <Link href="/auth/sign-in">
+                <Button className="rounded-full hover:bg-primary hover:text-primary-foreground transition-colors">
+                  <Icons.LogIn className="mr-2 h-4 w-4" />
+                  Sign In
+                </Button>
+              </Link>
+            </SignedOut>
+
+            <SignedIn>
+              <div className="flex items-center gap-4">
+                <Link href="/dashboard">
+                  <Button className="rounded-full hover:bg-primary hover:text-primary-foreground transition-colors">
+                    <Icons.Wallet className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: "h-8 w-8 rounded-full",
+                    },
+                  }}
+                />
+              </div>
+            </SignedIn>
           </div>
         </div>
       </div>
