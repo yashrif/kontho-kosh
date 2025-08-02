@@ -2,11 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/common/Icons";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import Link from "next/link";
-import {
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const Navigation = () => {
   return (
@@ -57,10 +53,10 @@ const Navigation = () => {
 
             {/* Authentication */}
             <SignedOut>
-              <Link href="/auth/sign-in">
+              <Link href="/auth">
                 <Button className="rounded-full hover:bg-primary hover:text-primary-foreground transition-colors">
-                  <Icons.LogIn className="mr-2 h-4 w-4" />
-                  Sign In
+                  <Icons.Wallet className="mr-2 h-4 w-4" />
+                  Connect
                 </Button>
               </Link>
             </SignedOut>

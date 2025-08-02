@@ -34,23 +34,13 @@ export const TRUST_INDICATORS: TrustIndicator[] = [
 	}
 ]
 
-export const AUTH_CONTENT: Record<'sign-in' | 'sign-up', AuthContentMode> = {
-	'sign-in': {
-		badge: "Secure • Decentralized • AI-Powered",
-		title: {
-			line1: "Welcome Back to",
-			line2: "Content Protection"
-		},
-		description: "Continue protecting your intellectual property with blockchain-verified originality."
+export const AUTH_CONTENT: AuthContentMode = {
+	badge: "Secure • Decentralized • Web3-Powered",
+	title: {
+		line1: "Connect to",
+		line2: "Content Protection"
 	},
-	'sign-up': {
-		badge: "Secure • Decentralized • AI-Powered",
-		title: {
-			line1: "Join the Future of",
-			line2: "Content Protection"
-		},
-		description: "Be part of the revolution that combines AI detection with decentralized verification."
-	}
+	description: "Protect your intellectual property with blockchain-verified originality using your MetaMask wallet."
 }
 
 export const TESTIMONIAL = {
@@ -63,6 +53,14 @@ export const TESTIMONIAL = {
 
 export const NAVIGATION = {
 	backToHome: "Back to Home"
+}
+
+export const METAMASK_REQUIREMENT = {
+	sectionTitle: "MetaMask browser extension is required",
+	installTitle: "Install MetaMask Extension",
+	installDescription: "Required for Web3 authentication",
+	installUrl: "https://metamask.io/download/",
+	installButtonText: "Install"
 }
 
 export const FEATURE_HIGHLIGHTS: FeatureHighlight[] = [

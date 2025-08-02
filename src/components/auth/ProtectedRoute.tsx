@@ -60,20 +60,14 @@ const ProtectedRoute = ({ children, fallback }: ProtectedRouteProps) => {
 					<div className="space-y-2">
 						<h2 className="text-2xl font-bold">Access Restricted</h2>
 						<p className="text-muted-foreground max-w-md">
-							You need to be signed in to access this content. Please sign in or create an account to continue.
+							You need to connect your wallet to access this content. Please connect with MetaMask to continue.
 						</p>
 					</div>
-					<div className="flex justify-center gap-3">
-						<Link href="/auth/sign-in">
-							<Button variant="outline">
-								<Icons.LogIn className="mr-2 h-4 w-4" />
-								Sign In
-							</Button>
-						</Link>
-						<Link href="/auth/sign-up">
+					<div className="flex justify-center">
+						<Link href="/auth">
 							<Button>
-								<Icons.UserPlus className="mr-2 h-4 w-4" />
-								Sign Up
+								<Icons.Wallet className="mr-2 h-4 w-4" />
+								Connect Wallet
 							</Button>
 						</Link>
 					</div>
