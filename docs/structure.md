@@ -1,66 +1,93 @@
 ```markdown
-## Project Pages & Structure
+# Konthokosh Application Page Structure
 
-### 1. Home Page
-- Project introduction/mission statement
-- Call to action (register, login, learn more)
-- Features overview (Originality verification, Blockchain security, AI-powered checks)
-- Visuals/hero section
+This document outlines all the required pages for the Konthokosh platform, based on the SRS. Each page includes a description and its main sections/components.
 
-### 2. Register Page
-- User registration form (name, email, password, etc.)
-- Option for social sign-up (if supported)
-- Link to login
+---
 
-### 3. Login Page
-- User login form (email, password)
-- Forgot password link
-- Link to register
+## 1. Landing Page (`/`)
+**Purpose:** Introduction to Konthokosh, value proposition, and entry point for users.
+**Sections:**
+- Hero section (project tagline, call-to-action)
+- Features overview (AI originality, blockchain proof, privacy)
+- How it works (step-by-step visual)
+- Login/Sign Up button (MetaMask/Clerk integration)
+- Footer (links, contact, social)
 
-### 4. Dashboard
-- User profile summary
-- Quick stats (number of posts, originality score, blockchain status)
-- Navigation to post content, view history, settings
+## 2. Authentication Page (`/auth`)
+**Purpose:** User authentication via MetaMask (wallet) and Clerk.
+**Sections:**
+- MetaMask connect button
+- Clerk login/signup (optional email/username)
+- Auth status display (success/error)
 
-### 5. Post Content Page
-- Content submission form (text, media upload)
-- Real-time originality check (AI-powered)
-- Blockchain verification status
+## 3. Dashboard Page (`/dashboard`)
+**Purpose:** Main user hub after login; shows user info and content summary.
+**Sections:**
+- User profile (wallet address, optional username/email)
+- Quick stats (number of posts, originality status)
+- Button to create new post
+- List of recent submissions (with status: processing, original, duplicate)
+
+## 4. New Post Page (`/post/new`)
+**Purpose:** Submit new story/poem for originality check and blockchain registration.
+**Sections:**
+- Content editor (textarea or rich text)
 - Submit button
+- Loading indicator (PageLoader)
+- Result display (original/duplicate, similarity score, details)
+- Blockchain registration status (pending, success, error)
 
-### 6. Content Feed / Explore Page
-- List of recent/public posts
-- Filters (by originality, date, user, etc.)
-- Each post shows originality score, blockchain verification badge, author info
+## 5. Post Details Page (`/post/[id]`)
+**Purpose:** View details of a single post, originality report, and blockchain proof.
+**Sections:**
+- Post content (title, body)
+- Originality status (original/duplicate, similarity %)
+- Similar posts (list with links and similarity scores)
+- Blockchain info (content hash, block ID, timestamp, transaction hash)
+- Copy/share proof button
 
-### 7. Post Details Page
-- Full content view
-- Originality analysis details
-- Blockchain transaction info (hash, timestamp)
-- Comments section
+## 6. My Posts Page (`/my-posts`)
+**Purpose:** List all posts submitted by the logged-in user.
+**Sections:**
+- Table/list of posts (title, date, status, actions)
+- Filter/search bar
+- Link to post details
 
-### 8. User Profile Page
-- User info (avatar, bio, stats)
-- List of user’s posts
-- Originality and verification history
+## 7. Explore/Public Feed Page (`/explore`)
+**Purpose:** Browse public, original posts from all users.
+**Sections:**
+- List/grid of posts (title, author, date)
+- Filters (recent, most original, trending)
+- Search bar
+- Link to post details
 
-### 9. Admin/Moderator Page (if applicable)
-- User management
-- Content moderation tools
-- System analytics
+## 8. Originality Report Modal/Drawer (component, used in multiple pages)
+**Purpose:** Show detailed similarity analysis for a post.
+**Sections:**
+- List of similar posts (with similarity %)
+- Highlighted text differences (if available)
+- Option to close
 
-### 10. Settings Page
-- Account settings (email, password, notifications)
-- Blockchain wallet integration (if required)
-- Privacy options
+## 9. Settings/Profile Page (`/settings`)
+**Purpose:** Manage user profile, wallet, and preferences.
+**Sections:**
+- Profile info (wallet, email, username)
+- Option to disconnect wallet
+- Notification preferences
 
-### 11. About/Documentation Page
-- Project background
-- How originality verification works
-- Blockchain integration details
-- FAQ
+## 10. Error/Not Found Page (`/404`)
+**Purpose:** Shown for invalid routes or missing content.
+**Sections:**
+- Error message
+- Link to home/dashboard
 
-### 12. Error/Not Found Page
-- Friendly error message
-- Navigation back to home or previous page
+---
+
+## Notes
+- All pages should be responsive and support both light/dark themes.
+- Use PageLoader for loading states.
+- Use UI components and color scheme as per coding guidelines.
+- Authentication is required for all pages except Landing, Auth, and 404.
+- Blockchain registration and originality check are tightly integrated in the new post flow.
 ```
