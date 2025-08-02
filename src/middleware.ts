@@ -10,8 +10,7 @@ const isProtectedRoute = createRouteMatcher([
 
 // Define auth routes that should redirect to dashboard if already signed in
 const isAuthRoute = createRouteMatcher([
-	'/auth/sign-in(.*)',
-	'/auth/sign-up(.*)',
+	'/auth(.*)',
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

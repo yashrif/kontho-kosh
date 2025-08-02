@@ -25,7 +25,8 @@ import {
 	Moon,
 	LogIn,
 	UserPlus,
-	User
+	User,
+	Download
 } from 'lucide-react'
 
 export type IconProps = LucideProps
@@ -91,6 +92,9 @@ export const Icons = {
 	LogIn,
 	UserPlus,
 	User,
+
+	// ⬇️ Download Icon
+	Download,
 
 	// Social Media Icons
 	GitHub: Github,

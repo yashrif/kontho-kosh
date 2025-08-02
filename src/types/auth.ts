@@ -19,9 +19,8 @@ export type AuthState = {
 }
 
 export type AuthAction =
-	| 'sign-in'
-	| 'sign-up'
-	| 'sign-out'
+	| 'connect'
+	| 'disconnect'
 	| 'profile';
 
 export type TrustIndicator = {

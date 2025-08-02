@@ -23,6 +23,63 @@ const DashboardPage = () => {
 						</p>
 					</div>
 
+					{/* Debug: User Object Display */}
+					{user && (
+						<Card className="mb-8 p-6 bg-muted/30">
+							<h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+								<Icons.Shield className="h-5 w-5 text-primary" />
+								User Object Debug Info
+							</h2>
+							<div className="space-y-4">
+								<div>
+									<h3 className="font-medium text-sm text-muted-foreground mb-2">Basic Info:</h3>
+									<pre className="bg-background p-3 rounded-lg text-xs overflow-auto">
+										{JSON.stringify({
+											id: user.id,
+											firstName: user.firstName,
+											lastName: user.lastName,
+											fullName: user.fullName,
+											username: user.username,
+											primaryEmailAddress: user.primaryEmailAddress?.emailAddress,
+											imageUrl: user.imageUrl,
+										}, null, 2)}
+									</pre>
+								</div>
+
+								<div>
+									<h3 className="font-medium text-sm text-muted-foreground mb-2">External Accounts (including MetaMask):</h3>
+									<pre className="bg-background p-3 rounded-lg text-xs overflow-auto">
+										{JSON.stringify(user.externalAccounts?.map(account => ({
+											id: account.id,
+											provider: account.provider,
+											externalId: 'externalId' in account ? account.externalId : undefined,
+											emailAddress: account.emailAddress,
+											username: account.username,
+											publicMetadata: account.publicMetadata,
+										})), null, 2)}
+									</pre>
+								</div>
+
+								<div>
+									<h3 className="font-medium text-sm text-muted-foreground mb-2">Web3 Wallets:</h3>
+									<pre className="bg-background p-3 rounded-lg text-xs overflow-auto">
+										{JSON.stringify(user.web3Wallets?.map(wallet => ({
+											id: wallet.id,
+											web3Wallet: wallet.web3Wallet,
+										})), null, 2)}
+									</pre>
+								</div>
+
+								<div>
+									<h3 className="font-medium text-sm text-muted-foreground mb-2">Complete User Object:</h3>
+									<pre className="bg-background p-3 rounded-lg text-xs overflow-auto max-h-96">
+										{JSON.stringify(user, null, 2)}
+									</pre>
+								</div>
+							</div>
+						</Card>
+					)}
+
 					{/* Dashboard Grid */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{/* Upload Content Card */}
