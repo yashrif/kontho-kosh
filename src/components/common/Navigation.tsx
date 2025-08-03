@@ -3,6 +3,7 @@ import { Icons } from "@/components/common/Icons";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const Navigation = () => {
   return (
@@ -71,8 +72,15 @@ const Navigation = () => {
                 </Link>
                 <UserButton
                   appearance={{
+                    baseTheme: dark,
                     elements: {
                       userButtonAvatarBox: "h-8 w-8 rounded-full",
+                    },
+                  }}
+                  userProfileMode="modal"
+                  userProfileProps={{
+                    appearance: {
+                      baseTheme: dark,
                     },
                   }}
                 />

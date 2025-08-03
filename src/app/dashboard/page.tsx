@@ -1,6 +1,7 @@
 'use client';
 
-import { useUser } from "@clerk/nextjs";
+import { useUser, useAuth } from "@clerk/nextjs";
+import { useState } from "react";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,102 @@ import { Icons } from "@/components/common/Icons";
 
 const DashboardPage = () => {
 	const { user } = useUser();
+	const { getToken } = useAuth();
+	const [tokenStatus, setTokenStatus] = useState<string>("");
+	const [isLoading, setIsLoading] = useState(false);
+	const [clientToken, setClientToken] = useState<string>("");
+
+	/**
+	 * 🎯 Get JWT token on the client side
+	 */
+	const handleGetClientToken = async () => {
+		setIsLoading(true);
+		setTokenStatus("Getting client-side token...");
+		
+		try {
+			if (!getToken) {
+				setTokenStatus("❌ getToken not available");
+				return;
+			}
+
+			const token = await getToken();
+			if (token) {
+				setClientToken(token);
+				setTokenStatus(`✅ Client token retrieved! Length: ${token.length} chars`);
+				console.log("🎯 Client-side JWT Token:", token);
+				
+				// Decode and log token parts
+				try {
+					const tokenParts = token.split('.');
+					const payload = JSON.parse(
+						Buffer.from(tokenParts[1], 'base64url').toString('utf-8')
+					);
+					console.log("📄 Client Token Payload:", JSON.stringify(payload, null, 2));
+				} catch (decodeError) {
+					console.error("❌ Error decoding client token:", decodeError);
+				}
+			} else {
+				setTokenStatus("❌ No token received");
+			}
+		} catch (error) {
+			console.error("Client token error:", error);
+			setTokenStatus(`❌ Error getting client token: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	/**
+	 * 🔐 Trigger JWT token logging on the server
+	 */
+	const handleLogToken = async () => {
+		setIsLoading(true);
+		setTokenStatus("Fetching token...");
+		
+		try {
+			const response = await fetch('/api/debug/token');
+			const data = await response.json();
+			
+			if (response.ok) {
+				setTokenStatus(`✅ Token logged to console! User ID: ${data.userId} | Token Length: ${data.tokenLength} chars`);
+				console.log("🎯 Token debug response:", data);
+			} else {
+				setTokenStatus(`❌ Error: ${data.error || 'Unknown error'}`);
+				console.error("API Error Response:", data);
+			}
+		} catch (error) {
+			console.error("Token fetch error:", error);
+			setTokenStatus(`❌ Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	/**
+	 * 🔗 Trigger user data API call (which also logs token)
+	 */
+	const handleUserApiCall = async () => {
+		setIsLoading(true);
+		setTokenStatus("Calling user API...");
+		
+		try {
+			const response = await fetch('/api/user');
+			const data = await response.json();
+			
+			if (response.ok) {
+				setTokenStatus(`✅ User API called successfully! Check console for token. Protected docs: ${data.data?.protectedDocuments || 0}`);
+				console.log("👤 User API response:", data);
+			} else {
+				setTokenStatus(`❌ Error: ${data.error || 'Unknown error'}`);
+				console.error("User API Error Response:", data);
+			}
+		} catch (error) {
+			console.error("User API error:", error);
+			setTokenStatus(`❌ Network error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	return (
 		<ProtectedRoute>
@@ -22,6 +119,76 @@ const DashboardPage = () => {
 							Manage your content protection and verify authenticity with blockchain technology.
 						</p>
 					</div>
+
+					{/* JWT Token Debug Section */}
+					<Card className="mb-8 p-6 bg-primary/5 border-primary/20">
+						<h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+							<Icons.Shield className="h-5 w-5 text-primary" />
+							JWT Token Debug Console
+						</h2>
+						<p className="text-sm text-muted-foreground mb-4">
+							Click the buttons below to trigger JWT token logging in the server console.
+							Check your terminal/server logs to see the token details.
+						</p>
+						
+						<div className="flex flex-wrap gap-3 mb-4">
+							<Button 
+								onClick={handleGetClientToken}
+								disabled={isLoading}
+								className="flex items-center gap-2"
+							>
+								{isLoading ? (
+									<Icons.Shield className="h-4 w-4 animate-spin" />
+								) : (
+									<Icons.Gem className="h-4 w-4" />
+								)}
+								Get Client Token
+							</Button>
+
+							<Button 
+								onClick={handleLogToken}
+								disabled={isLoading}
+								variant="outline"
+								className="flex items-center gap-2"
+							>
+								{isLoading ? (
+									<Icons.Shield className="h-4 w-4 animate-spin" />
+								) : (
+									<Icons.Search className="h-4 w-4" />
+								)}
+								Debug Server Token
+							</Button>
+							
+							<Button 
+								onClick={handleUserApiCall}
+								disabled={isLoading}
+								variant="outline"
+								className="flex items-center gap-2"
+							>
+								{isLoading ? (
+									<Icons.Shield className="h-4 w-4 animate-spin" />
+								) : (
+									<Icons.FileText className="h-4 w-4" />
+								)}
+								Call User API
+							</Button>
+						</div>
+						
+						{tokenStatus && (
+							<div className="p-3 rounded-lg bg-background/50 border">
+								<p className="text-sm font-mono">{tokenStatus}</p>
+							</div>
+						)}
+
+						{clientToken && (
+							<div className="mt-4 p-4 rounded-lg bg-accent/10 border border-accent/20">
+								<h4 className="font-medium text-sm text-accent-foreground mb-2">Client-side JWT Token:</h4>
+								<div className="bg-background/50 p-3 rounded border">
+									<p className="text-xs font-mono break-all">{clientToken}</p>
+								</div>
+							</div>
+						)}
+					</Card>
 
 					{/* Debug: User Object Display */}
 					{user && (

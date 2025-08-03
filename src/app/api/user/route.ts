@@ -3,8 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
 	try {
-		// Get the authenticated user
-		const { userId } = await auth();
+		// Get the authenticated user and token
+		const { userId, getToken } = await auth();
+
+		// Get and console the JWT token
+		if (getToken) {
+			const token = await getToken();
+			console.log("🔐 JWT Token from Clerk:", token);
+		}
 
 		if (!userId) {
 			return NextResponse.json(
@@ -37,7 +43,13 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
 	try {
-		const { userId } = await auth();
+		const { userId, getToken } = await auth();
+
+		// Get and console the JWT token for POST requests too
+		if (getToken) {
+			const token = await getToken();
+			console.log("🔐 JWT Token from Clerk (POST):", token);
+		}
 
 		if (!userId) {
 			return NextResponse.json(
