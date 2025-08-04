@@ -5,7 +5,7 @@ This document outlines all the required pages for the Konthokosh platform, based
 
 ---
 
-## 1. Landing Page (`/`)
+## 1. Landing Page (`/`) ✅
 **Purpose:** Introduction to Konthokosh, value proposition, and entry point for users.
 **Sections:**
 - Hero section (project tagline, call-to-action)
@@ -14,7 +14,7 @@ This document outlines all the required pages for the Konthokosh platform, based
 - Login/Sign Up button (MetaMask/Clerk integration)
 - Footer (links, contact, social)
 
-## 2. Authentication Page (`/auth`)
+## 2. Authentication Page (`/auth`) ✅
 **Purpose:** User authentication via MetaMask (wallet) and Clerk.
 **Sections:**
 - MetaMask connect button

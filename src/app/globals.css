@@ -1,4 +1,6 @@
 @import "tailwindcss";
+
+@plugin "tailwind-scrollbar-hide";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -41,6 +43,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-highlight: var(--highlight);
 }
 
 :root {
@@ -76,6 +79,7 @@
   --sidebar-accent-foreground: hsl(220, 13%, 13%);
   --sidebar-border: hsl(220, 13%, 91%);
   --sidebar-ring: hsl(221, 83%, 53%);
+  --highlight: oklch(0.852 0.199 91.936);
 }
 
 .dark {
@@ -110,6 +114,7 @@
   --sidebar-accent-foreground: hsl(0, 0%, 98%);
   --sidebar-border: hsl(220, 13%, 18%);
   --sidebar-ring: hsl(221, 83%, 65%);
+  --highlight: oklch(0.852 0.199 91.936);
 }
 
 @layer base {
@@ -215,4 +220,103 @@
 
 .cl-internal-d5pd3d {
   @apply shadow-none rounded-none;
+}
+
+/* -------------------------------- MDX Editor ------------------------------ */
+
+/* Modern MDX Editor Styling */
+.mdx-editor-modern {
+  @apply border-0 bg-transparent;
+}
+
+.mdx-editor-modern .mdxeditor-toolbar {
+  @apply bg-muted/30 backdrop-blur-sm border-0 border-b border-border rounded-t-lg;
+}
+
+.mdx-editor-modern .mdxeditor-toolbar button {
+  @apply text-muted-foreground hover:text-foreground hover:bg-background/50 rounded-md transition-all duration-200;
+}
+
+.mdx-editor-modern .mdxeditor-toolbar button[data-state="on"] {
+  @apply text-primary bg-primary/10;
+}
+
+.mdx-editor-modern .mdxeditor-toolbar .mdxeditor-separator {
+  @apply bg-border;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor {
+  @apply bg-transparent border-0 focus:outline-none;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror {
+  @apply bg-transparent border-0 focus:outline-none text-foreground;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-muted-foreground;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror h1 {
+  @apply text-2xl font-bold text-foreground border-b border-border pb-2 mb-4;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror h2 {
+  @apply text-xl font-semibold text-foreground mb-3;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror h3 {
+  @apply text-lg font-semibold text-foreground mb-2;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror blockquote {
+  @apply border-l-4 border-primary/30 pl-4 italic text-muted-foreground bg-muted/20 py-2 rounded-r-lg;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-primary;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror pre {
+  @apply bg-muted/50 p-4 rounded-lg overflow-x-auto border border-border;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror a {
+  @apply text-primary hover:text-primary/80 underline transition-colors duration-200;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror ul,
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror ol {
+  @apply space-y-1;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror li {
+  @apply text-foreground;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror table {
+  @apply w-full border-collapse border border-border rounded-lg overflow-hidden;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror th,
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror td {
+  @apply border border-border p-2 text-left;
+}
+
+.mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror th {
+  @apply bg-muted/50 font-semibold;
+}
+
+/* Focus styles */
+.mdx-editor-modern:focus-within {
+  @apply ring-2 ring-primary/20 border-primary/30;
+}
+
+/* Dark mode adjustments */
+.dark .mdx-editor-modern .mdxeditor-rich-text-editor .ProseMirror {
+  @apply text-foreground;
+}
+
+.dark .mdx-editor-modern .mdxeditor-toolbar {
+  @apply bg-muted/20;
 }

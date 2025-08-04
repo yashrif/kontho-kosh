@@ -1,6 +1,7 @@
 'use client';
 
 import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -89,16 +90,18 @@ const DashboardPage = () => {
 									<Icons.FileText className="h-6 w-6 text-primary" />
 								</div>
 								<div>
-									<h3 className="font-semibold">Upload Content</h3>
+									<h3 className="font-semibold">Create New Post</h3>
 									<p className="text-sm text-muted-foreground">
-										Protect your original work
+										Write and protect your original content
 									</p>
 								</div>
 							</div>
-							<Button className="w-full">
-								<Icons.ArrowRight className="mr-2 h-4 w-4" />
-								Upload New Content
-							</Button>
+							<Link href="/dashboard/new-post">
+								<Button className="w-full">
+									<Icons.Plus className="mr-2 h-4 w-4" />
+									Create New Post
+								</Button>
+							</Link>
 						</Card>
 
 						{/* Verify Content Card */}
