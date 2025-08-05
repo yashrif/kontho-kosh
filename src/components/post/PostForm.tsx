@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Icons } from "@/components/common/Icons";
+import { MDXEditor } from "@/components/post/MDXEditor";
 import { type PostFormData, type PostVisibility } from "@/types/post";
+import { type MDXEditorMethods } from "@mdxeditor/editor";
 
 type PostFormProps = {
   initialData?: Partial<PostFormData>;
@@ -68,6 +70,7 @@ const PostForm = ({
 
   const [tagInput, setTagInput] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const editorRef = useRef<MDXEditorMethods>(null);
 
   const validateForm = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -140,6 +143,22 @@ const PostForm = ({
     },
     [tagInput, handleAddTag]
   );
+
+  const handleContentChange = useCallback((markdown: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      content: markdown,
+    }));
+
+    // Clear content error when user starts typing
+    if (errors.content && markdown.trim()) {
+      setErrors((prev) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { content, ...rest } = prev;
+        return rest;
+      });
+    }
+  }, [errors.content]);
 
   return (
     <div className="space-y-6">
@@ -283,7 +302,24 @@ const PostForm = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {/* TODO: Add Markdown Editor or Rich Text Editor here */}
+            <Label htmlFor="content" className="text-sm font-medium">
+              Post Content
+            </Label>
+            <div className={errors.content ? "ring-2 ring-destructive/20 rounded-lg" : ""}>
+              <MDXEditor
+                ref={editorRef}
+                markdown={formData.content}
+                onChange={handleContentChange}
+                placeholder="Start writing your post content... You can use markdown formatting, add images, tables, code blocks, and more!"
+              />
+            </div>
+            {errors.content && (
+              <p className="text-xs text-destructive">{errors.content}</p>
+            )}
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span>Supports markdown, images, tables, code blocks, and more</span>
+              <span>{formData.content.length} characters</span>
+            </div>
           </div>
         </CardContent>
       </Card>

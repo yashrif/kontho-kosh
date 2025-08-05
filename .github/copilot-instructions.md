@@ -24,6 +24,7 @@ We use tabs, not spaces.
 
 ## Instructions
 
+- Always use `yarn` for package management
 - Analyze the following files from the [dependencies](../.dependencies) folder to understand the project structure
   1. (routes)[../.dependencies/routes.md] -> includes the rotues and component paths
 - Use colors from the [globals.css](../src/app/globals.css) instead of hardcoded colors
