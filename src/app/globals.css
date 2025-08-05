@@ -1,5 +1,7 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+
+/* MDX Editor Styles */
+@import "../components/post/mdx-editor.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -41,6 +43,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-highlight: var(--highlight);
 }
 
 :root {
@@ -76,6 +79,7 @@
   --sidebar-accent-foreground: hsl(220, 13%, 13%);
   --sidebar-border: hsl(220, 13%, 91%);
   --sidebar-ring: hsl(221, 83%, 53%);
+  --highlight: oklch(0.852 0.199 91.936);
 }
 
 .dark {
@@ -110,6 +114,7 @@
   --sidebar-accent-foreground: hsl(0, 0%, 98%);
   --sidebar-border: hsl(220, 13%, 18%);
   --sidebar-ring: hsl(221, 83%, 65%);
+  --highlight: oklch(0.852 0.199 91.936);
 }
 
 @layer base {
@@ -124,6 +129,17 @@
   /* Smooth scrolling for better UX */
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Ensure list styles work in MDX Editor */
+  .mdx-editor-wrapper ul,
+  .mdx-editor-wrapper ol {
+    list-style: revert;
+    padding-left: 1.5rem;
+  }
+
+  .mdx-editor-wrapper li {
+    display: list-item;
   }
 
   /* Custom scrollbar styling */
@@ -141,6 +157,27 @@
 
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary/70;
+  }
+}
+
+@layer utilities {
+  /* Scrollbar hiding utilities */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-default {
+    -ms-overflow-style: auto;
+    scrollbar-width: auto;
+  }
+
+  .scrollbar-default::-webkit-scrollbar {
+    display: block;
   }
 }
 
