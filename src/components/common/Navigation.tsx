@@ -1,11 +1,13 @@
-import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/common/Icons";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { getServerClerkTheme } from "@/utils/server-theme";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
+import Link from "next/link";
 
-const Navigation = () => {
+const Navigation = async () => {
+  const theme = await getServerClerkTheme();
+
   return (
     <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -72,7 +74,7 @@ const Navigation = () => {
                 </Link>
                 <UserButton
                   appearance={{
-                    baseTheme: dark,
+                    baseTheme: theme,
                     elements: {
                       userButtonAvatarBox: "h-8 w-8 rounded-full",
                     },
@@ -80,7 +82,7 @@ const Navigation = () => {
                   userProfileMode="modal"
                   userProfileProps={{
                     appearance: {
-                      baseTheme: dark,
+                      baseTheme: theme,
                     },
                   }}
                 />

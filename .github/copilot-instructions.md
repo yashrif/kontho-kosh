@@ -24,9 +24,11 @@ We use tabs, not spaces.
 
 ## Instructions
 
+- Always use `yarn` for package management
 - Analyze the following files from the [dependencies](../.dependencies) folder to understand the project structure
   1. (routes)[../.dependencies/routes.md] -> includes the rotues and component paths
 - Use colors from the [globals.css](../src/app/globals.css) instead of hardcoded colors
+- Always prioritize the use of `ShadCN` components if new components are needed
 - Use [ui components](../src/components/ui) for all UI elements instead of HTML elements (button, form, e.t.c)
 - Use the reusable components from the [components](../src/components) folder as much as possible
 - Store all the SVGs in the [Icons.tsx](../src/components/Icons.tsx) component and use them from there

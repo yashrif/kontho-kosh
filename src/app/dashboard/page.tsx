@@ -2,6 +2,7 @@
 
 import { useUser, useAuth } from "@clerk/nextjs";
 import { useState } from "react";
+import Link from "next/link";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ const DashboardPage = () => {
 	const handleGetClientToken = async () => {
 		setIsLoading(true);
 		setTokenStatus("Getting client-side token...");
-		
+
 		try {
 			if (!getToken) {
 				setTokenStatus("❌ getToken not available");
@@ -32,7 +33,7 @@ const DashboardPage = () => {
 				setClientToken(token);
 				setTokenStatus(`✅ Client token retrieved! Length: ${token.length} chars`);
 				console.log("🎯 Client-side JWT Token:", token);
-				
+
 				// Decode and log token parts
 				try {
 					const tokenParts = token.split('.');
@@ -60,11 +61,11 @@ const DashboardPage = () => {
 	const handleLogToken = async () => {
 		setIsLoading(true);
 		setTokenStatus("Fetching token...");
-		
+
 		try {
 			const response = await fetch('/api/debug/token');
 			const data = await response.json();
-			
+
 			if (response.ok) {
 				setTokenStatus(`✅ Token logged to console! User ID: ${data.userId} | Token Length: ${data.tokenLength} chars`);
 				console.log("🎯 Token debug response:", data);
@@ -86,11 +87,11 @@ const DashboardPage = () => {
 	const handleUserApiCall = async () => {
 		setIsLoading(true);
 		setTokenStatus("Calling user API...");
-		
+
 		try {
 			const response = await fetch('/api/user');
 			const data = await response.json();
-			
+
 			if (response.ok) {
 				setTokenStatus(`✅ User API called successfully! Check console for token. Protected docs: ${data.data?.protectedDocuments || 0}`);
 				console.log("👤 User API response:", data);
@@ -130,9 +131,9 @@ const DashboardPage = () => {
 							Click the buttons below to trigger JWT token logging in the server console.
 							Check your terminal/server logs to see the token details.
 						</p>
-						
+
 						<div className="flex flex-wrap gap-3 mb-4">
-							<Button 
+							<Button
 								onClick={handleGetClientToken}
 								disabled={isLoading}
 								className="flex items-center gap-2"
@@ -145,7 +146,7 @@ const DashboardPage = () => {
 								Get Client Token
 							</Button>
 
-							<Button 
+							<Button
 								onClick={handleLogToken}
 								disabled={isLoading}
 								variant="outline"
@@ -158,8 +159,8 @@ const DashboardPage = () => {
 								)}
 								Debug Server Token
 							</Button>
-							
-							<Button 
+
+							<Button
 								onClick={handleUserApiCall}
 								disabled={isLoading}
 								variant="outline"
@@ -173,7 +174,7 @@ const DashboardPage = () => {
 								Call User API
 							</Button>
 						</div>
-						
+
 						{tokenStatus && (
 							<div className="p-3 rounded-lg bg-background/50 border">
 								<p className="text-sm font-mono">{tokenStatus}</p>
@@ -256,16 +257,18 @@ const DashboardPage = () => {
 									<Icons.FileText className="h-6 w-6 text-primary" />
 								</div>
 								<div>
-									<h3 className="font-semibold">Upload Content</h3>
+									<h3 className="font-semibold">Create New Post</h3>
 									<p className="text-sm text-muted-foreground">
-										Protect your original work
+										Write and protect your original content
 									</p>
 								</div>
 							</div>
-							<Button className="w-full">
-								<Icons.ArrowRight className="mr-2 h-4 w-4" />
-								Upload New Content
-							</Button>
+							<Link href="/dashboard/new-post">
+								<Button className="w-full">
+									<Icons.Plus className="mr-2 h-4 w-4" />
+									Create New Post
+								</Button>
+							</Link>
 						</Card>
 
 						{/* Verify Content Card */}

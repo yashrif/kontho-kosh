@@ -1,103 +1,99 @@
 import {
-	LucideProps,
-	Shield,
-	Lock,
-	Brain,
-	FileText,
-	Link,
-	Check,
-	Users,
-	ArrowRight,
-	Globe,
-	Star,
-	Target,
-	Gem,
-	Radio,
-	Search,
-	Wallet,
-	Zap,
-	TrendingUp,
-	Award,
-	Github,
-	Twitter,
-	Linkedin,
-	Sun,
-	Moon,
-	LogIn,
-	UserPlus,
-	User,
-	Download
-} from 'lucide-react'
+  ArrowRight,
+  Award,
+  Bold,
+  Brain,
+  Check,
+  ChevronLeft,
+  Code,
+  Download,
+  Edit,
+  Eye,
+  FileText,
+  Gem,
+  Github,
+  Globe,
+  Heading1,
+  Heading2,
+  Heading3,
+  Image,
+  Italic,
+  Link,
+  Linkedin,
+  List,
+  ListOrdered,
+  Lock,
+  LucideProps,
+  Moon,
+  Plus,
+  Quote,
+  Redo,
+  Save,
+  Search,
+  Send,
+  Shield,
+  Strikethrough,
+  Sun,
+  Table,
+  Tag,
+  Target,
+  TrendingUp,
+  Underline,
+  Undo,
+  User,
+  Users,
+  Wallet,
+  X,
+  Zap,
+} from "lucide-react";
 
-export type IconProps = LucideProps
+export type IconProps = LucideProps;
 
 export const Icons = {
-	// 🔐 Security & Blockchain Icons
-	Shield,
-	Lock,
-
-	// 🧠 AI Icons
-	Brain,
-
-	// 📋 Document Icons
-	FileText,
-
-	// � Blockchain Icons
-	Link,
-
-	// ✓ Check Icons
-	Check,
-
-	// 👥 User Icons
-	Users,
-
-	// 🚀 Arrow Icons
-	ArrowRight,
-
-	// 🌐 Globe Icon
-	Globe,
-
-	// ⭐ Star Icon
-	Star,
-
-	// 🎯 Target Icon
-	Target,
-
-	// 💎 Gem Icon
-	Gem,
-
-	// 📡 Radio Icon
-	Radio,
-
-	// 🔍 Search Icon
-	Search,
-
-	// 💰 Wallet Icon
-	Wallet,
-
-	// ⚡ Zap Icon
-	Zap,
-
-	// 📈 TrendingUp Icon
-	TrendingUp,
-
-	// 🏆 Award Icon
-	Award,
-
-	// 🌞 Theme Icons
-	Sun,
-	Moon,
-
-	// 🔐 Authentication Icons
-	LogIn,
-	UserPlus,
-	User,
-
-	// ⬇️ Download Icon
-	Download,
-
-	// Social Media Icons
-	GitHub: Github,
-	X: Twitter, // Using Twitter icon for X
-	LinkedIn: Linkedin
-}
+  ArrowRight,
+  Award,
+  Bold,
+  Brain,
+  Check,
+  ChevronLeft,
+  Close: X,
+  Code,
+  Download,
+  Edit,
+  Eye,
+  FileText,
+  Gem,
+  GitHub: Github,
+  Globe,
+  Heading1,
+  Heading2,
+  Heading3,
+  Image,
+  Italic,
+  Link,
+  LinkedIn: Linkedin,
+  List,
+  ListOrdered,
+  Lock,
+  Moon,
+  Plus,
+  Quote,
+  Redo,
+  Save,
+  Search,
+  Send,
+  Shield,
+  Strikethrough,
+  Sun,
+  Table,
+  Tag,
+  Target,
+  TrendingUp,
+  Underline,
+  Undo,
+  User,
+  Users,
+  Wallet,
+  X: X,
+  Zap,
+};
