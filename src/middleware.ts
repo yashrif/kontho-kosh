@@ -13,6 +13,26 @@ const isProtectedRoute = createRouteMatcher([
 const isAuthRoute = createRouteMatcher(["/auth(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
+  // Get auth data and token for debugging
+  const { userId } = await auth();
+
+  // Optional: Log JWT token for protected routes (for debugging)
+  // Uncomment the following lines if you want middleware-level token logging
+  /*
+	if (isProtectedRoute(req) && userId) {
+		try {
+			const { getToken } = await auth();
+			if (getToken) {
+				const token = await getToken();
+				console.log(`🔐 Middleware JWT Token for ${req.nextUrl.pathname}:`, token);
+				console.log(`👤 User ID: ${userId}`);
+			}
+		} catch (error) {
+			console.error("❌ Error getting token in middleware:", error);
+		}
+	}
+	*/
+
   // Protect routes that require authentication
   if (isProtectedRoute(req)) {
     await auth.protect();
@@ -20,7 +40,6 @@ export default clerkMiddleware(async (auth, req) => {
 
   // Redirect to dashboard if user is signed in and tries to access auth pages
   if (isAuthRoute(req)) {
-    const { userId } = await auth();
     if (userId) {
       const url = new URL("/dashboard", req.url);
       return Response.redirect(url);
