@@ -3,14 +3,11 @@
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import { Icons } from "@/components/common/Icons";
 import { PostForm } from "@/components/post/PostForm";
-import { PostStatusCard } from "@/components/post/PostStatusCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  type OriginalityReport,
-  type PostFormData,
-  type PostStatus,
-} from "@/types/post";
+import { type PostFormData } from "@/types/post";
+import { useKonthoKoshApi, handleKonthoKoshError } from "@/utils/konthokosh-api";
+import type { KonthoKoshPost } from "@/types/konthokosh-api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -21,131 +18,70 @@ import { useCallback, useState } from "react";
 const NewPostPage = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [postStatus, setPostStatus] = useState<PostStatus>("draft");
-  const [originalityReport, setOriginalityReport] =
-    useState<OriginalityReport>();
-  const [showStatusCard, setShowStatusCard] = useState(false);
+  const [createdPost, setCreatedPost] = useState<KonthoKoshPost | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  
+  // 🌐 KonthoKosh API integration with automatic JWT token
+  const { createPost } = useKonthoKoshApi();
 
   /**
-   * 🔍 Simulate AI originality analysis
-   */
-  const simulateOriginalityAnalysis =
-    useCallback(async (): Promise<OriginalityReport> => {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      // Mock originality report
-      const mockReport: OriginalityReport = {
-        score: Math.floor(Math.random() * 30) + 70, // 70-100% original
-        isOriginal: true,
-        confidence: 0.95,
-        similarPosts: [
-          {
-            id: "1",
-            title: "Understanding Blockchain Technology",
-            author: "TechWriter123",
-            similarity: 15,
-            source: "Medium",
-            url: "https://medium.com/example",
-          },
-          {
-            id: "2",
-            title: "Web3 and the Future",
-            author: "CryptoExpert",
-            similarity: 8,
-            source: "Dev.to",
-            url: "https://dev.to/example",
-          },
-        ],
-        analysisDetails: {
-          plagiarismPercentage: 5,
-          uniqueContent: 95,
-          sourcesFound: 15420,
-        },
-      };
-
-      return mockReport;
-    }, []);
-
-  /**
-   * 📤 Handle form submission with originality check
+   * � Handle form submission (Direct KonthoKosh API)
    */
   const handleSubmit = useCallback(
     async (data: PostFormData) => {
       setIsSubmitting(true);
-      setShowStatusCard(true);
-      setPostStatus("analyzing");
+      setErrorMessage("");
+      setCreatedPost(null);
 
       try {
-        // Step 1: Start originality analysis
-        console.log("Starting originality analysis for:", data.title);
+        console.log("🚀 Creating post on KonthoKosh API...");
 
-        const report = await simulateOriginalityAnalysis();
-        setOriginalityReport(report);
+        // Combine title and content for the API
+        const postContent = `${data.title}\n\n${data.content}`;
 
-        if (report.score >= 70) {
-          // Step 2: If original enough, proceed with blockchain registration
-          setPostStatus("verified");
+        // 🌐 Create post using KonthoKosh API with automatic JWT token
+        const newPost = await createPost(postContent);
 
-          // TODO: Implement actual blockchain registration
-          console.log("Registering on blockchain:", {
-            title: data.title,
-            contentHash: "mock-hash-" + Date.now(),
-            visibility: data.visibility,
-            tags: data.tags,
-          });
-
-          // Simulate blockchain registration
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-
-          setPostStatus("published");
-
-          // Success! Navigate to post or dashboard
-          setTimeout(() => {
-            router.push("/dashboard");
-          }, 2000);
-        } else {
-          setPostStatus("rejected");
-        }
+        console.log("✅ Post created successfully:", newPost);
+        setCreatedPost(newPost);
       } catch (error) {
-        console.error("Error creating post:", error);
-        setPostStatus("rejected");
+        console.error("❌ Error creating post:", error);
+        const friendly = handleKonthoKoshError(error);
+        setErrorMessage(friendly);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [router, simulateOriginalityAnalysis]
+  [createPost]
   );
 
   /**
-   * 💾 Handle saving as draft
+   * 💾 Handle saving as draft (using KonthoKosh API)
    */
   const handleSaveDraft = useCallback(async (data: PostFormData) => {
     try {
-      // TODO: Implement draft saving
-      console.log("Saving draft:", data);
+      console.log("💾 Saving draft to KonthoKosh API...");
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Show success message (you could use a toast here)
-      alert("Draft saved successfully!");
+      // Combine title and content for the API, mark as draft
+      const draftContent = `[DRAFT] ${data.title}\n\n${data.content}`;
+      
+      // 🌐 Save draft using KonthoKosh API with automatic JWT token
+      const savedDraft = await createPost(draftContent);
+      
+      console.log("✅ Draft saved successfully:", savedDraft);
+      alert("Draft saved successfully to KonthoKosh!");
     } catch (error) {
-      console.error("Error saving draft:", error);
+      console.error("❌ Error saving draft:", error);
+      const errorMessage = handleKonthoKoshError(error);
+      alert(`Failed to save draft: ${errorMessage}`);
     }
-  }, []);
+  }, [createPost]);
 
-  const handleRetryAnalysis = useCallback(() => {
-    // Reset status and retry
-    setPostStatus("draft");
-    setOriginalityReport(undefined);
-    setShowStatusCard(false);
+  // Reset helpers (not analyzing anymore)
+  const handleReset = useCallback(() => {
+    setCreatedPost(null);
+    setErrorMessage("");
   }, []);
-
-  const handleViewReport = useCallback(() => {
-    // TODO: Open detailed report modal/page
-    console.log("Viewing detailed report:", originalityReport);
-  }, [originalityReport]);
 
   return (
     <ProtectedRoute>
@@ -181,47 +117,68 @@ const NewPostPage = () => {
 
           {/* Main Content */}
           <div className="space-y-8">
-            {/* Status Card - Show during/after analysis */}
-            {showStatusCard && (
-              <div className="animate-fade-in-up">
-                <PostStatusCard
-                  status={postStatus}
-                  originalityReport={originalityReport}
-                  onRetry={handleRetryAnalysis}
-                  onViewReport={handleViewReport}
-                />
-              </div>
-            )}
-
             {/* Post Form */}
-            {!showStatusCard ||
-            postStatus === "draft" ||
-            postStatus === "rejected" ? (
-              <div className="animate-fade-in-up">
-                <PostForm
-                  onSubmit={handleSubmit}
-                  onSaveDraft={handleSaveDraft}
-                  isSubmitting={isSubmitting}
-                />
-              </div>
-            ) : null}
+            <div className="animate-fade-in-up">
+              <PostForm
+                onSubmit={handleSubmit}
+                onSaveDraft={handleSaveDraft}
+                isSubmitting={isSubmitting}
+              />
+            </div>
 
-            {/* Success Message */}
-            {postStatus === "published" && (
-              <Card className="border-l-4 border-l-green-500 bg-green-50 dark:bg-green-900/20 animate-fade-in-up">
+            {/* Error Message */}
+            {errorMessage && (
+              <Card className="border-l-4 border-l-red-500 bg-red-50 dark:bg-red-900/20 animate-fade-in-up">
                 <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
-                      <Icons.Check className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40">
+                      <Icons.X className="h-5 w-5 text-red-600 dark:text-red-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-green-800 dark:text-green-200">
-                        Post Published Successfully!
+                      <h3 className="font-semibold text-red-800 dark:text-red-200">
+                        Failed to create post
                       </h3>
-                      <p className="text-sm text-green-600 dark:text-green-300">
-                        Your content has been verified, protected, and is now
-                        live. Redirecting to dashboard...
+                      <p className="text-sm text-red-700 dark:text-red-300 mt-1">
+                        {errorMessage}
                       </p>
+                      <Button variant="outline" size="sm" className="mt-3" onClick={handleReset}>
+                        Try Again
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Created Post Result */}
+            {createdPost && (
+              <Card className="border-l-4 border-l-green-500 bg-green-50 dark:bg-green-900/20 animate-fade-in-up">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/40">
+                      <Icons.Check className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="font-semibold text-green-800 dark:text-green-200">
+                        Post created successfully
+                      </h3>
+                      <div className="text-sm text-green-700 dark:text-green-300">
+                        <div><span className="font-medium">ID:</span> {createdPost.id}</div>
+                        <div><span className="font-medium">User ID:</span> {createdPost.userId}</div>
+                        <div><span className="font-medium">Approved:</span> {createdPost.isApproved ? 'Yes' : 'No'}</div>
+                        <div><span className="font-medium">Created:</span> {new Date(createdPost.createdAt).toLocaleString()}</div>
+                      </div>
+                      <div className="mt-2 p-3 rounded bg-white/70 dark:bg-black/20 border text-sm">
+                        <pre className="whitespace-pre-wrap break-words">{createdPost.post}</pre>
+                      </div>
+                      <div className="flex gap-2 pt-2">
+                        <Button size="sm" onClick={() => router.push('/dashboard')}>
+                          Go to Dashboard
+                        </Button>
+                        <Button size="sm" variant="outline" onClick={handleReset}>
+                          Create Another
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
