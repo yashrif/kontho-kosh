@@ -1,4 +1,5 @@
 import { useBackendApi, ApiError } from '@/utils/api-client';
+import { useCallback, useMemo } from 'react';
 import type { 
 	KonthoKoshApiResponse, 
 	KonthoKoshPost, 
@@ -24,7 +25,7 @@ export const useKonthoKoshApi = () => {
 	 * @param imagesId - Optional array of image IDs
 	 * @returns Promise with the created post data
 	 */
-	const createPost = async (postContent: string, imagesId?: number[]): Promise<KonthoKoshPost> => {
+	const createPost = useCallback(async (postContent: string, imagesId?: number[]): Promise<KonthoKoshPost> => {
 		try {
 			console.log('🚀 Creating post on KonthoKosh API...');
 
@@ -73,12 +74,12 @@ export const useKonthoKoshApi = () => {
 			
 			throw new Error('Network error. Please try again.');
 		}
-	};
+	}, [api]);
 
 	/**
 	 * 📋 Get user's posts (if needed later)
 	 */
-	const getUserPosts = async (): Promise<KonthoKoshPost[]> => {
+	const getUserPosts = useCallback(async (): Promise<KonthoKoshPost[]> => {
 		try {
 			console.log('📋 Fetching user posts from KonthoKosh API...');
 
@@ -100,46 +101,44 @@ export const useKonthoKoshApi = () => {
 			console.error('❌ Failed to fetch posts from KonthoKosh:', error);
 			throw error;
 		}
-	};
+	}, [api]);
 
-	return {
+	const getFeedPosts = useCallback(async (params: { page?: number; size?: number; keyword?: string } = {}): Promise<{ posts: KonthoKoshFeedPost[]; pagination: { page: number; size: number; totalCount: number; totalPages: number } }> => {
+		const { page = 1, size = 10, keyword } = params;
+		try {
+			const response = await api.get<KonthoKoshPagedPostsResponse>('/api/v1/posts', {
+				params: {
+					page,
+					size,
+					...(keyword ? { keyword } : {}),
+				},
+			});
+
+			if (!response.data.success || !response.data.data) {
+				throw new ApiError(
+					response.data.message || 'Failed to fetch posts',
+					response.data.statusCode || response.status,
+					response.data
+				);
+			}
+
+			const { data, pagination } = response.data.data;
+			return { posts: data, pagination };
+		} catch (error) {
+			console.error('❌ Failed to fetch feed posts:', error);
+			if (error instanceof ApiError) {
+				throw new Error(error.message);
+			}
+			throw new Error('Network error. Please try again.');
+		}
+	}, [api]);
+
+	return useMemo(() => ({
 		createPost,
 		getUserPosts,
-		/**
-		 * 📄 Get paginated feed posts with optional keyword filter
-		 */
-		getFeedPosts: async (params: { page?: number; size?: number; keyword?: string } = {}): Promise<{ posts: KonthoKoshFeedPost[]; pagination: { page: number; size: number; totalCount: number; totalPages: number } }> => {
-			const { page = 1, size = 10, keyword } = params;
-			try {
-				const response = await api.get<KonthoKoshPagedPostsResponse>('/api/v1/posts', {
-					params: {
-						page,
-						size,
-						...(keyword ? { keyword } : {}),
-					},
-				});
-
-				if (!response.data.success || !response.data.data) {
-					throw new ApiError(
-						response.data.message || 'Failed to fetch posts',
-						response.data.statusCode || response.status,
-						response.data
-					);
-				}
-
-				const { data, pagination } = response.data.data;
-				return { posts: data, pagination };
-			} catch (error) {
-				console.error('❌ Failed to fetch feed posts:', error);
-				if (error instanceof ApiError) {
-					throw new Error(error.message);
-				}
-				throw new Error('Network error. Please try again.');
-			}
-		},
-		// Expose the underlying API client for custom requests
+		getFeedPosts,
 		api,
-	};
+	}), [createPost, getUserPosts, getFeedPosts, api]);
 };
 
 /**

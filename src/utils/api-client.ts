@@ -1,6 +1,7 @@
-'use client';
+	'use client';
 
 import { useAuth } from "@clerk/nextjs";
+import { useCallback, useMemo } from 'react';
 
 /**
  * 🌐 API Client Configuration
@@ -99,7 +100,7 @@ export const useApiClient = (config: ApiClientConfig = {}) => {
 	 * @param options - Request options
 	 * @returns Promise with API response
 	 */
-	const request = async <T = unknown>(options: ApiRequestOptions): Promise<ApiResponse<T>> => {
+	const request = useCallback(async <T = unknown>(options: ApiRequestOptions): Promise<ApiResponse<T>> => {
 		const {
 			url,
 			params,
@@ -139,7 +140,6 @@ export const useApiClient = (config: ApiClientConfig = {}) => {
 					const token = await getToken();
 					if (token) {
 						headersRecord.Authorization = `Bearer ${token}`;
-						console.log('🔐 Auto-added Clerk JWT token to request:', fullURL.pathname);
 					} else {
 						console.warn('⚠️ No token available from Clerk');
 					}
@@ -203,59 +203,59 @@ export const useApiClient = (config: ApiClientConfig = {}) => {
 
 			throw new ApiError('Unknown error occurred', 500);
 		}
-	};
+	}, [baseURL, timeout, defaultHeaders, getToken]);
 
 	/**
 	 * 📥 GET request
 	 */
-	const get = <T = unknown>(url: string, options: Omit<ApiRequestOptions, 'url' | 'method'> = {}) => {
+	const get = useCallback(<T = unknown>(url: string, options: Omit<ApiRequestOptions, 'url' | 'method'> = {}) => {
 		return request<T>({ ...options, url, method: 'GET' });
-	};
+	}, [request]);
 
 	/**
 	 * 📤 POST request
 	 */
-	const post = <T = unknown>(url: string, data?: unknown, options: Omit<ApiRequestOptions, 'url' | 'method' | 'body'> = {}) => {
+	const post = useCallback(<T = unknown>(url: string, data?: unknown, options: Omit<ApiRequestOptions, 'url' | 'method' | 'body'> = {}) => {
 		return request<T>({
 			...options,
 			url,
 			method: 'POST',
 			body: data ? JSON.stringify(data) : undefined,
 		});
-	};
+	}, [request]);
 
 	/**
 	 * ✏️ PUT request
 	 */
-	const put = <T = unknown>(url: string, data?: unknown, options: Omit<ApiRequestOptions, 'url' | 'method' | 'body'> = {}) => {
+	const put = useCallback(<T = unknown>(url: string, data?: unknown, options: Omit<ApiRequestOptions, 'url' | 'method' | 'body'> = {}) => {
 		return request<T>({
 			...options,
 			url,
 			method: 'PUT',
 			body: data ? JSON.stringify(data) : undefined,
 		});
-	};
+	}, [request]);
 
 	/**
 	 * 🔄 PATCH request
 	 */
-	const patch = <T = unknown>(url: string, data?: unknown, options: Omit<ApiRequestOptions, 'url' | 'method' | 'body'> = {}) => {
+	const patch = useCallback(<T = unknown>(url: string, data?: unknown, options: Omit<ApiRequestOptions, 'url' | 'method' | 'body'> = {}) => {
 		return request<T>({
 			...options,
 			url,
 			method: 'PATCH',
 			body: data ? JSON.stringify(data) : undefined,
 		});
-	};
+	}, [request]);
 
 	/**
 	 * 🗑️ DELETE request
 	 */
-	const del = <T = unknown>(url: string, options: Omit<ApiRequestOptions, 'url' | 'method'> = {}) => {
+	const del = useCallback(<T = unknown>(url: string, options: Omit<ApiRequestOptions, 'url' | 'method'> = {}) => {
 		return request<T>({ ...options, url, method: 'DELETE' });
-	};
+	}, [request]);
 
-	return {
+	return useMemo(() => ({
 		request,
 		get,
 		post,
@@ -263,7 +263,7 @@ export const useApiClient = (config: ApiClientConfig = {}) => {
 		patch,
 		delete: del,
 		ApiError,
-	};
+	}), [request, get, post, put, patch, del]);
 };
 
 /**
