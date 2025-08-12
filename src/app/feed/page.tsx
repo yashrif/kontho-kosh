@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Icons } from '@/components/common/Icons';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import PageLoader from '@/components/common/PageLoader';
+import { CreatePostSection } from '@/components/feed/CreatePostSection';
 import { useBackendApi } from '@/utils/api-client';
 import type { KonthoKoshFeedPost } from '@/types/konthokosh-api';
 
@@ -23,7 +24,7 @@ const FeedPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  const loadPosts = async (pageNum: number, searchKeyword: string = '') => {
+  const loadPosts = useCallback(async (pageNum: number, searchKeyword: string = '') => {
     setLoading(true);
     setError('');
     
@@ -50,7 +51,15 @@ const FeedPage = () => {
       setLoading(false);
       setHasLoaded(true);
     }
-  };
+  }, [api]);
+
+  /**
+   * � Handle when a post is created to refresh the feed
+   */
+  const handlePostCreated = useCallback(() => {
+    loadPosts(1, keyword);
+    setPage(1);
+  }, [loadPosts, keyword]);
 
   const handleInitialLoad = () => {
     if (!hasLoaded) {
@@ -96,6 +105,9 @@ const FeedPage = () => {
         <h1 className="text-2xl font-semibold">Feed</h1>
         <div className="text-sm text-muted-foreground">{totalCount} posts</div>
       </div>
+
+      {/* Create Post Section */}
+      <CreatePostSection onPostCreated={handlePostCreated} />
 
       <form onSubmit={handleSearch} className="flex items-center gap-2">
         <div className="relative flex-1">
