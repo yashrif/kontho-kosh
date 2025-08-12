@@ -26,6 +26,7 @@ const MyContentPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
 
   const loadPosts = useCallback(async (pageNum: number, searchKeyword: string = '', approvalStatus: boolean | null = null) => {
     setLoading(true);
@@ -63,6 +64,38 @@ const MyContentPage = () => {
       setHasLoaded(true);
     }
   }, [api]);
+
+  const deletePost = useCallback(async (postId: number) => {
+    if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      return;
+    }
+
+    setDeleteLoading(postId);
+    
+    try {
+      const response = await api.delete(`/api/v1/posts/${postId}`);
+      
+      if (response.status === 200 || response.status === 204) {
+        // Remove the deleted post from the current posts list
+        setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+        setTotalCount(prevCount => Math.max(0, prevCount - 1));
+        
+        // If this was the last post on the current page and we're not on page 1, go to previous page
+        if (posts.length === 1 && page > 1) {
+          const newPage = page - 1;
+          setPage(newPage);
+          loadPosts(newPage, keyword, isApproved);
+        }
+      } else {
+        setError('Failed to delete post. Please try again.');
+      }
+    } catch (err) {
+      setError('Failed to delete post. Please check your connection and try again.');
+      console.error('Delete error:', err);
+    } finally {
+      setDeleteLoading(null);
+    }
+  }, [api, posts.length, page, keyword, isApproved, loadPosts]);
 
   const handleInitialLoad = () => {
     if (!hasLoaded) {
@@ -303,23 +336,41 @@ const MyContentPage = () => {
                       </div>
                     </div>
                     
-                    {/* Status Badge */}
-                    <Badge 
-                      variant={post.isApproved ? "default" : "secondary"}
-                      className="ml-2"
-                    >
-                      {post.isApproved ? (
-                        <>
-                          <Icons.Check className="mr-1 h-3 w-3" />
-                          Approved
-                        </>
-                      ) : (
-                        <>
-                          <Icons.Clock className="mr-1 h-3 w-3" />
-                          Pending
-                        </>
-                      )}
-                    </Badge>
+                    {/* Status Badge and Actions */}
+                    <div className="flex items-center gap-2 ml-2">
+                      <Badge 
+                        variant={post.isApproved ? "default" : "secondary"}
+                      >
+                        {post.isApproved ? (
+                          <>
+                            <Icons.Check className="mr-1 h-3 w-3" />
+                            Approved
+                          </>
+                        ) : (
+                          <>
+                            <Icons.Clock className="mr-1 h-3 w-3" />
+                            Pending
+                          </>
+                        )}
+                      </Badge>
+                      
+                      {/* Delete Button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => deletePost(post.id)}
+                        disabled={deleteLoading === post.id}
+                        className="h-8 px-2 text-destructive hover:text-destructive-foreground hover:bg-destructive rounded-full"
+                      >
+                        {deleteLoading === post.id ? (
+                          <div className="animate-heartbeat">
+                            <Icons.Shield className="h-3 w-3" />
+                          </div>
+                        ) : (
+                          <Icons.Trash className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
 
                   <Separator />
