@@ -14,7 +14,7 @@ const PageLoader = ({ message = "Loading..." }: PageLoaderProps) => {
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="text-center space-y-4">
 				<div className="flex justify-center">
-					<div className="animate-spin">
+					<div className="animate-heartbeat">
 						<Icons.Shield className="h-8 w-8 text-primary" />
 					</div>
 				</div>
