@@ -24,7 +24,7 @@ const Navigation = async () => {
 
           {/* Navigation Links */}
           <nav className="hidden md:flex items-center gap-8">
-            <SignedOut>
+            {/* <SignedOut>
               <a
                 href="#features"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -49,9 +49,9 @@ const Navigation = async () => {
               >
                 Roadmap
               </a>
-            </SignedOut>
+            </SignedOut> */}
 
-            <SignedIn>
+            {/* <SignedIn> */}
               <Link
                 href="/dashboard"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -64,7 +64,7 @@ const Navigation = async () => {
               >
                 Feed
               </Link>
-            </SignedIn>
+            {/* </SignedIn> */}
           </nav>
 
           {/* CTA Button */}
