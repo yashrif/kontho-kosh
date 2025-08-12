@@ -64,6 +64,12 @@ const Navigation = async () => {
               >
                 Feed
               </Link>
+              <Link
+                href="/mycontent"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+              >
+                My Content
+              </Link>
             {/* </SignedIn> */}
           </nav>
 
