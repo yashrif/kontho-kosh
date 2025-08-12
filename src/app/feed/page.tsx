@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import PageLoader from '@/components/common/PageLoader';
+import ClientNavigation from '@/components/common/ClientNavigation';
 import { CreatePostSection } from '@/components/feed/CreatePostSection';
 import { useBackendApi } from '@/utils/api-client';
 import type { KonthoKoshFeedPost } from '@/types/konthokosh-api';
@@ -96,11 +97,20 @@ const FeedPage = () => {
   }
 
   if (loading && !hasLoaded) {
-    return <PageLoader message="Loading feed..." />;
+    return (
+      <div className="min-h-screen">
+        <ClientNavigation />
+        <div className="pt-16">
+          <PageLoader message="Loading feed..." />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
+    <div className="min-h-screen">
+      <ClientNavigation />
+      <div className="container mx-auto px-4 py-8 pt-24 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Feed</h1>
         <div className="text-sm text-muted-foreground">{totalCount} posts</div>
@@ -222,6 +232,7 @@ const FeedPage = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
