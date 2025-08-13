@@ -347,7 +347,9 @@ const PostForm = ({
         >
           {isSubmitting ? (
             <>
-              <div className="animate-spin mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+              <div className="animate-heartbeat mr-2">
+                <Icons.Shield className="h-4 w-4" />
+              </div>
               {isDraft ? "Publishing..." : "Creating..."}
             </>
           ) : (

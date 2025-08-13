@@ -139,7 +139,7 @@ const DashboardPage = () => {
 								className="flex items-center gap-2"
 							>
 								{isLoading ? (
-									<Icons.Shield className="h-4 w-4 animate-spin" />
+									<Icons.Shield className="h-4 w-4 animate-heartbeat" />
 								) : (
 									<Icons.Gem className="h-4 w-4" />
 								)}
@@ -153,7 +153,7 @@ const DashboardPage = () => {
 								className="flex items-center gap-2"
 							>
 								{isLoading ? (
-									<Icons.Shield className="h-4 w-4 animate-spin" />
+									<Icons.Shield className="h-4 w-4 animate-heartbeat" />
 								) : (
 									<Icons.Search className="h-4 w-4" />
 								)}
@@ -167,7 +167,7 @@ const DashboardPage = () => {
 								className="flex items-center gap-2"
 							>
 								{isLoading ? (
-									<Icons.Shield className="h-4 w-4 animate-spin" />
+									<Icons.Shield className="h-4 w-4 animate-heartbeat" />
 								) : (
 									<Icons.FileText className="h-4 w-4" />
 								)}

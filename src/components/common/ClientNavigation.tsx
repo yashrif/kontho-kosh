@@ -1,12 +1,20 @@
+"use client";
+
 import { Icons } from "@/components/common/Icons";
 import { ThemeToggle } from "@/components/common/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { getServerClerkTheme } from "@/utils/server-theme";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { dark, neobrutalism } from "@clerk/themes";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 
-const Navigation = async () => {
-  const theme = await getServerClerkTheme();
+/**
+ * 🧭 Client-side Navigation Component
+ * Compatible with client components and uses client-side theme detection
+ */
+const ClientNavigation = () => {
+  const { theme } = useTheme();
+  const clerkTheme = theme === "dark" ? dark : neobrutalism;
 
   return (
     <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b">
@@ -22,9 +30,9 @@ const Navigation = async () => {
             </span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation Links - Show different links when signed in */}
           <nav className="hidden md:flex items-center gap-8">
-            {/* <SignedOut>
+            <SignedOut>
               <a
                 href="#features"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -49,9 +57,9 @@ const Navigation = async () => {
               >
                 Roadmap
               </a>
-            </SignedOut> */}
+            </SignedOut>
 
-            {/* <SignedIn> */}
+            <SignedIn>
               <Link
                 href="/dashboard"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
@@ -70,7 +78,7 @@ const Navigation = async () => {
               >
                 My Content
               </Link>
-            {/* </SignedIn> */}
+            </SignedIn>
           </nav>
 
           {/* CTA Button */}
@@ -90,7 +98,7 @@ const Navigation = async () => {
             <SignedIn>
               <UserButton
                 appearance={{
-                  baseTheme: theme,
+                  baseTheme: clerkTheme,
                   elements: {
                     userButtonAvatarBox: "h-8 w-8 rounded-full",
                   },
@@ -98,7 +106,7 @@ const Navigation = async () => {
                 userProfileMode="modal"
                 userProfileProps={{
                   appearance: {
-                    baseTheme: theme,
+                    baseTheme: clerkTheme,
                   },
                 }}
               />
@@ -110,4 +118,4 @@ const Navigation = async () => {
   );
 };
 
-export default Navigation;
+export default ClientNavigation;

@@ -213,6 +213,21 @@
   }
 }
 
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+}
+
 /* Utility classes for animations */
 .animate-fade-in-up {
   animation: fade-in-up 0.8s ease-out;
@@ -225,6 +240,10 @@
 .animate-gradient-shift {
   animation: gradient-shift 3s ease infinite;
   background-size: 200% 200%;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
 }
 
 /* Glass morphism effect */
